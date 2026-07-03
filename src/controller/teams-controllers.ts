@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "@/database/prisma";
 import { z } from "zod"
-import id from "zod/v4/locales/id.js";
 
 class TeamsController {
   async create(requeste:Request, response:Response, next:NextFunction) {
@@ -27,9 +26,34 @@ class TeamsController {
     return response.json(teams)
   }
 
-  update(request:Request, response:Response, next:NextFunction) {
-    return 
+  async update(request:Request, response:Response, next:NextFunction) {
+    const paramSchema = z.object({
+      id: z.string()
+    })
+
+    const bodySchema = z.object({
+      name: z.string().trim().min(1, "O nome do time deve possuir no minimo 1 caractere").max(100, "O nomde deve ter no maximo 100 caracteres"),
+      description: z.string().optional()
+    })
+
+
+    const { id } = paramSchema.parse(request.params)
+    const { name, description } = bodySchema.parse(request.body)
+
+    const teamUpdate = await prisma.team.update({
+      where: {
+        id
+      },
+      data: {
+        name,
+        description
+      }
+    })
+    
+    return response.json(teamUpdate)
   }
+
+
 }
 
 
