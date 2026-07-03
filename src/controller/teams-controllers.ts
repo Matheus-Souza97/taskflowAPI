@@ -53,7 +53,18 @@ class TeamsController {
     return response.json(teamUpdate)
   }
 
+  async delete(request:Request, response:Response, next:NextFunction) {
+    const paramSchema = z.object({
+      id: z.string()
+    })
 
+    const { id } = paramSchema.parse(request.params)
+
+    const deleteTeam = await prisma.team.delete({
+      where: {id}
+    })
+    return response.status(201).json({message: "sucess"})
+  }
 }
 
 
