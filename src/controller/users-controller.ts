@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import { prisma } from "@/database/prisma";
 import { hash } from "bcrypt"
 import { z } from "zod"
+import { AppError } from "@/utils/App.Error";
 
 class UserController {
   async create(request:Request, response:Response, next:NextFunction) {
@@ -12,9 +14,25 @@ class UserController {
 
     const { name, email, password } = bodySchema.parse(request.body)
 
+    const userWithSameEmail = await prisma.user.findFirst({where: {email}})
+
+    if(userWithSameEmail) {
+      throw new AppError("E mail não disponivel")
+    }
+
     const hashedPassword = await hash(password, 8)
 
-    return response.json({message: "ok"})
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword
+      }
+    })
+
+    const { password:_, ...userWithoutPassword } = user
+
+    return response.json({userWithoutPassword})
   }
 }
 
