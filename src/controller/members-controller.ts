@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/App.Error";
 import { z } from "zod"
+import { verify } from "node:crypto";
 
 
 class MembersContoller{
@@ -53,7 +54,7 @@ class MembersContoller{
     if(!verifyTeamId) {
       throw new AppError("Team ID notfound", 404)
     }
-    
+
     const members = await prisma.teamMember.findMany({where: {teamId}, 
       select: {
         user: {
@@ -70,8 +71,32 @@ class MembersContoller{
         }
       }})
 
-    return response.json(members)
+    return response.status(200).json(members)
 
+  }
+
+  async delete(request:Request, response:Response, next:NextFunction) {
+    const paramSchema = z.object({
+      userId: z.string(),
+      teamId: z.string()
+    })
+    const { userId, teamId } = paramSchema.parse(request.params)
+
+    const verifyUserId = await prisma.user.findUnique({where: {id:userId}})
+
+    if(!verifyUserId) {
+      throw new AppError("User ID notfound", 404)
+    }
+
+    const verifyTeamId = await prisma.team.findUnique({where: {id:teamId}})
+
+    if(!verifyTeamId) {
+      throw new AppError("Team ID notfound", 404)
+    }
+
+    const deleteUserFromTeam = await prisma.teamMember.delete({where: {userId_teamId: {userId, teamId}}})
+
+    return response.status(204).json({message: "sucess"})
   }
 
 

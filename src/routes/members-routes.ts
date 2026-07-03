@@ -10,5 +10,6 @@ membersRoutes.use(ensureAuthenticated, verifyUserAuthorization(["admin"]))
 
 membersRoutes.post("/", membersController.create)
 membersRoutes.get("/:teamId", membersController.show)
+membersRoutes.delete("/user/:userId/team/:teamId", membersController.delete)
 
 export { membersRoutes }
