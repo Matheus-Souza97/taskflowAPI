@@ -9,5 +9,6 @@ const membersController = new MembersContoller()
 membersRoutes.use(ensureAuthenticated, verifyUserAuthorization(["admin"]))
 
 membersRoutes.post("/", membersController.create)
+membersRoutes.get("/:teamId", membersController.show)
 
 export { membersRoutes }

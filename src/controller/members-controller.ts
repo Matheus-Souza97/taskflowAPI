@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/App.Error";
 import { z } from "zod"
-import { app } from "@/app";
+
 
 class MembersContoller{
   async create(request:Request, response:Response, next:NextFunction) {
@@ -39,8 +39,42 @@ class MembersContoller{
         userId,
         teamId
       }})
-    return response.json(member)
+    return response.status(201).json()
   }
+
+  async show(request:Request, response:Response, next:NextFunction) {
+    const paramSchema = z.object({
+      teamId: z.string()
+    })
+    const { teamId } = paramSchema.parse(request.params)
+
+    const verifyTeamId = await prisma.team.findUnique({where: {id:teamId}})
+
+    if(!verifyTeamId) {
+      throw new AppError("Team ID notfound", 404)
+    }
+    
+    const members = await prisma.teamMember.findMany({where: {teamId}, 
+      select: {
+        user: {
+          select: {
+            name: true,
+            id: true
+          }
+        },
+        team: {
+          select: {
+            name: true,
+            id: true
+          }
+        }
+      }})
+
+    return response.json(members)
+
+  }
+
+
 }
 
 export { MembersContoller }
