@@ -128,7 +128,25 @@ class TaskController {
       }})
 
     
-    return response.json(taskUpdate)
+    return response.status(200).json(taskUpdate)
+  }
+
+  async delete(request:Request, response:Response, next:NextFunction) {
+    const paramSchema = z.object({
+      taskId: z.string()
+    })
+
+    const { taskId } = paramSchema.parse(request.params)
+
+    const verifYTaskId = await prisma.task.findUnique({where:{id:taskId}})
+
+    if(!verifYTaskId) {
+      throw new AppError("Task ID notfound", 404)
+    }
+
+    const taskDelete = await prisma.task.delete({where: {id:taskId}})
+  
+    return response.status(204).json()
   }
 }
 
