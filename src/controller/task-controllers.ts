@@ -3,6 +3,7 @@ import { AppError } from "@/utils/App.Error";
 import { z } from "zod"
 import { prisma } from "@/database/prisma";
 
+
 class TaskController {
   async create(request:Request, response:Response, next:NextFunction) {
     const bodySchema = z.object({
@@ -40,6 +41,37 @@ class TaskController {
     })
 
     return response.status(200).json(task)
+  }
+
+  async show(request:Request, response:Response, next:NextFunction) {
+    const tasks = await prisma.task.findMany({
+      select: {
+        user: {
+          select: {
+            name:true
+          }
+        },
+        team: {
+          select: {
+            name:true
+          }
+        },
+        title:true,
+        description:true,
+        status:true,
+        priority:true
+      }})
+
+      const result = tasks.map(task => ({
+        title: task.title,
+        description: task.description,
+        priority: task.priority,
+        status: task.status,
+        name: task.user.name,
+        team: task.team.name
+      }))
+
+    return response.status(200).json(result)
   }
 }
 

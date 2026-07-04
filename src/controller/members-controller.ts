@@ -71,7 +71,14 @@ class MembersContoller{
         }
       }})
 
-    return response.status(200).json(members)
+      const results = members.map(member => ({
+        name: member.user.name,
+        user_id: member.user.id,
+        team: member.team.name,
+        team_id: member.team.id
+      }))
+
+    return response.status(200).json(results)
 
   }
 

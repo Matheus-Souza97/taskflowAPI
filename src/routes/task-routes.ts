@@ -10,5 +10,6 @@ const taskController = new TaskController()
 taskRouter.use(ensureAuthenticated, verifyUserAuthorization(["admin"]))
 
 taskRouter.post("/", taskController.create)
+taskRouter.get("/", taskController.show)
 
 export { taskRouter }
