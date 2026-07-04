@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/App.Error";
 import { z } from "zod"
-import { verify } from "node:crypto";
 
 
 class MembersContoller{

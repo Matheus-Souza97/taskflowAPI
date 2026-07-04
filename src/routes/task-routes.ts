@@ -11,5 +11,6 @@ taskRouter.use(ensureAuthenticated, verifyUserAuthorization(["admin"]))
 
 taskRouter.post("/", taskController.create)
 taskRouter.get("/", taskController.show)
+taskRouter.put("/", taskController.update)
 
 export { taskRouter }
