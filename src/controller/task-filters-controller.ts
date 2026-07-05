@@ -21,6 +21,24 @@ class FilterTaskController {
 
     return response.status(200).json(result)
   }
+
+  async priority(request:Request, response:Response, next:NextFunction) {
+    const bodySchema = z.object({
+      priority: z.enum(["high", "medium", "low"], "Informe a prioridade corretamente")
+    })
+
+    const { priority } = bodySchema.parse(request.body)
+
+    const testResult = await prisma.task.findFirst({where: {priority}})
+
+    if(!testResult) {
+      throw new AppError(`Nenhuma task aberta com a prioridade ${priority}`)
+    }
+
+    const result = await prisma.task.findMany({where: {priority}})
+
+    return response.json(result)
+  }
 }
 
 export { FilterTaskController }

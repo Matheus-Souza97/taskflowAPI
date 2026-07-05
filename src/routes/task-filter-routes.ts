@@ -7,6 +7,7 @@ const filterTaskController = new FilterTaskController()
 
 filterTaskRoutes.use(ensureAuthenticated)
 
-filterTaskRoutes.get("/", filterTaskController.status)
+filterTaskRoutes.get("/status", filterTaskController.status)
+filterTaskRoutes.get("/priority", filterTaskController.priority)
 
 export { filterTaskRoutes}
