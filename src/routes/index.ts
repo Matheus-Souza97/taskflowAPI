@@ -5,6 +5,7 @@ import { teamsRoutes } from "./teams-routes";
 import { membersRoutes } from "./members-routes";
 import { taskRouter } from "./task-routes";
 import { filterTaskRoutes } from "./task-filter-routes";
+import { membersTaskUpdateRoutes } from "./members-task-update-routes";
 
 const routes = Router()
 
@@ -14,5 +15,6 @@ routes.use("/teams", teamsRoutes)
 routes.use("/members", membersRoutes)
 routes.use("/task", taskRouter)
 routes.use("/filterTask", filterTaskRoutes)
+routes.use("/membersTaskUpdate", membersTaskUpdateRoutes)
 
 export { routes }
