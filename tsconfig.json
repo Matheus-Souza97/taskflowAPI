@@ -3,8 +3,7 @@
     "lib": ["ES2024"],
     "module": "nodenext",
     "target": "ES2024",
-    "types": [],
-    
+
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -14,5 +13,6 @@
 
     "strict": true,
     "skipLibCheck": true,
+    "isolatedModules": true
   }
 }
