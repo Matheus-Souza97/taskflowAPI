@@ -34,6 +34,24 @@ class UserController {
 
     return response.json({userWithoutPassword})
   }
+
+  async delete(request:Request, response:Response, next:NextFunction) {
+    const paramSchema = z.object({
+      userId: z.string()
+    })
+
+    const { userId } = paramSchema.parse(request.params)
+
+    const verifyUserId = await prisma.user.findUnique({where: { id: userId }})
+
+    if(!verifyUserId) {
+      throw new AppError("User ID notfound", 404)
+    }
+
+    await prisma.user.delete({ where: { id:userId }})
+
+    return response.status(204).json()
+  }
 }
 
 export { UserController }

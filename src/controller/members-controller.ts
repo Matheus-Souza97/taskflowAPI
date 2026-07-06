@@ -105,7 +105,6 @@ class MembersContoller{
     return response.status(204).json({message: "sucess"})
   }
 
-
 }
 
 export { MembersContoller }

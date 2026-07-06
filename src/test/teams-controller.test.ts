@@ -9,7 +9,6 @@ describe("teamsControler", () => {
 
   let token: string
   
-
   beforeAll( async() => {
     const sessions = await request(app).post("/sessions").send({
       email: "admin@teste.com",
@@ -54,6 +53,4 @@ describe("teamsControler", () => {
     
     expect(deleteTeam.status).toBe(204)
   })
-
-
 })
