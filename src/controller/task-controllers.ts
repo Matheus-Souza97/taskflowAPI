@@ -117,6 +117,19 @@ class TaskController {
       throw new AppError("Membro e time não estao vinculados", 400)
     }
 
+    if(status) {
+      if(status != verifyTaskId.status) {
+        await prisma.taskHistory.create({
+          data: {
+            taskId,
+            changedBy: assignedTo,
+            oldStatus: verifyTaskId.status,
+            newStatus: status
+          }
+        })
+      }
+    }
+
     const taskUpdate = await prisma.task.update({where: {id: taskId}, 
       data: {
         title,
@@ -127,7 +140,6 @@ class TaskController {
         teamId
       }})
 
-    
     return response.status(200).json(taskUpdate)
   }
 
