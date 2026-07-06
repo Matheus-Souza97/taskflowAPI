@@ -40,8 +40,10 @@ class TeamsController {
     })
 
     const bodySchema = z.object({
-      name: z.string().trim().min(1, "O nome do time deve possuir no minimo 1 caractere").max(100, "O nomde deve ter no maximo 100 caracteres"),
+      name: z.string().trim().min(1, "O nome do time deve possuir no minimo 1 caractere").max(100, "O nomde deve ter no maximo 100 caracteres").optional(),
       description: z.string().optional()
+    }).refine((data) => data.name !== undefined || data.description !== undefined, {
+      message: "Informe pelo menos um campo para atualização."
     })
 
     const { id } = paramSchema.parse(request.params)
