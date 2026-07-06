@@ -39,6 +39,19 @@ class MembersTaskUpdateController {
       throw new AppError("Task não vinculada ao usuario", 401)
     }
 
+    if(status) {
+      if(status != verifyTaskId.status) {
+        await prisma.taskHistory.create({
+          data: {
+            taskId,
+            changedBy: id,
+            oldStatus: verifyTaskId.status,
+            newStatus: status
+          }
+        })
+      }
+    }
+
     const taskUpdate = await prisma.task.update({where: {id: taskId},
     data: {
       title,
