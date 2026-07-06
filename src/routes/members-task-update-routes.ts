@@ -7,6 +7,6 @@ const membersTaskUpdateController = new MembersTaskUpdateController()
 
 membersTaskUpdateRoutes.use(ensureAuthenticated)
 
-membersTaskUpdateRoutes.use("/:id", membersTaskUpdateController.update)
+membersTaskUpdateRoutes.use("/", membersTaskUpdateController.update)
 
 export { membersTaskUpdateRoutes }

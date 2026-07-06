@@ -2,13 +2,10 @@ import { Response, Request, NextFunction } from "express";
 import { AppError } from "@/utils/App.Error";
 import { z } from "zod"
 import { prisma } from "@/database/prisma";
-import { taskRouter } from "@/routes/task-routes";
 
 class MembersTaskUpdateController {
   async update(request:Request, response:Response, next:NextFunction) {
-    const paramSchema = z.object({
-      id: z.string()
-    })
+    const id = request.user!.id
 
     const bodySchema = z.object({
       taskId: z.string(),
@@ -18,14 +15,7 @@ class MembersTaskUpdateController {
       status: z.enum(["pending", "in_progress", "completed"]).optional()
     })
 
-    const { id } = paramSchema.parse(request.params)
     const { taskId, title, description, priority, status } = bodySchema.parse(request.body)
-
-    const verifyUserId = await prisma.task.findFirst({where: {assignedTo:id}})
-
-    if(!verifyUserId) {
-      throw new AppError("ID de usuario invalido", 404)
-    }
 
     const verifyTaskId = await prisma.task.findUnique({where: { id: taskId}})
 
