@@ -6,6 +6,7 @@ import { membersRoutes } from "./members-routes";
 import { taskRouter } from "./task-routes";
 import { filterTaskRoutes } from "./task-filter-routes";
 import { membersTaskUpdateRoutes } from "./members-task-update-routes";
+import { taskHistoryRoutes } from "./task-history-routes";
 
 const routes = Router()
 
@@ -16,5 +17,6 @@ routes.use("/members", membersRoutes)
 routes.use("/task", taskRouter)
 routes.use("/filterTask", filterTaskRoutes)
 routes.use("/membersTaskUpdate", membersTaskUpdateRoutes)
+routes.use("/taskHistory", taskHistoryRoutes)
 
 export { routes }
